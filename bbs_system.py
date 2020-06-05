@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[61]:
+# In[35]:
 
 
 # BBS is apparently already implemented, but seemed more complicated than we needed?
@@ -32,12 +32,20 @@ def BBS_move(old_state):
     return state
 
 def BBS(arrangement, t):
+    if t >= 0:
+        system = [arrangement]
+        for move in range(t):
+            step = BBS_move(system[move])
+            system.append(step)
+        # returns only the state at time t, but can modify to return all intermediate steps
+        return system[t]
+    
     system = [arrangement]
-    for move in range(t):
-        step = BBS_move(system[move])
+    for move in range(-t):
+        step = backward_move(system[move])
         system.append(step)
-    # returns only the state at time t, but can modify to return all intermediate steps
-    return system[t]
+        
+    return system[-t]
 
 def SolitonContent(config):
     # takes an arrangement of balls (as a list) and returns its SolitonContent as a Tableau
@@ -66,11 +74,31 @@ def SolitonContent(config):
                     sc.append([])
     # sc has the solitons in the reverse order, so we have to reverse it
     return Tableau(sc[::-1])
+
+def backward_move(old_state):
+    # reverse and complement
+    n = max(old_state)
+    state = []
+    for elt in old_state[::-1]:
+        if elt == 0:
+            state.append(elt)
+        else:
+            state.append(n + 1 - elt)
     
-# TODO: implement backward moves
+    # preform a BBS move on the reversed complement and then return
+    # the reversed complement of that
+    mid_state = BBS_move(state)
+    new_state = []
+    for elt in mid_state[::-1]:
+        if elt == 0:
+            new_state.append(elt)
+        else:
+            new_state.append(n + 1 - elt)
+    
+    return new_state
 
 
-# In[63]:
+# In[36]:
 
 
 # examples:
@@ -85,4 +113,10 @@ print(BBS(pi, t), '\n')
 
 # SolitonContent returns the SolitonContent of a permuation
 SolitonContent(pi).pp() # pretty printing
+print('\n')
+
+# can also now put negative values for time arg in BBS
+# the printing is a bit awkward since it aligns on the left
+for time in range(0, -4, -1):
+    print(BBS([7,8,3,4,6,1,2,5], time))
 
