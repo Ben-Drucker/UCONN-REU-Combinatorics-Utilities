@@ -1,0 +1,49 @@
+﻿Vocabulary:
+1. DL / DL_k = the maximum of the sum of (the maximum size of a decreasing subsequence of u.) for k ‘u’s. I’ll rewrite this, but I just mean the D^L value for k subsequences as we normally mean...
+2. k = number of subsequences.
+3. Decomposition = The consecutive subsequences you get when cutting up a permutation
+4. Break Points = the places where a permutation is split into its consecutive subsequences
+
+
+Background:
+A question we are studying is, If we want to decompose a permutation into k consecutive subsequences, which concatenation of k subsequences will yield the maximum DL_k value? In other words, which decomposition will give us the maximum DL_k value? We will call the decompositions which yield the maximum DL_k value ‘good decompositions’. We also notice that some permutations have multiple decompositions of k subsequences which can yield the maximum DL_k value, i.e. multiple ‘good decompositions’ for a given number of subsequences. 
+We want to understand all possible good decompositions for each k taking a value from 1 through n (i.e. 1 through ‘the total number of elements in the permutation’). We can visualize a map of these decompositions as nodes on a grid. At the bottom is one node for the one good decomposition of  k=1. The second grid line up we have all the good decompositions for k=2 mapped horizontally as nodes. The third grid line up we have all the good decompositions for k=3, so on and so forth. The very top of the map, on the nth grid line, would be one node for the one good decomposition for k=n. (Note: every good decomposition on a grid line definitionally yields the exact same value for that DL_k)
+In this map, we can connect nodes to other nodes on either the grid line above or the grid line below. A node on the kth grid line is connected to a node on the ‘k+1’th line if the two good decompositions break the permutation at identical spots except one; in other words, the decomposition of the ‘k+1’th node is almost exactly the same as the decomposition of the kth node, except the ‘k+1’th decomposition is broken at one more spot.
+(Example: If we had the permutation 4321765, we would connect the nodes with decompositions 4321_765 (on grid line k=2) and 4321_76_5 (on grid line k=3))
+
+
+Questions:
+With this idea, we ask ourselves three questions about every permutation:
+1. Can every node on each kth line always connect to any node on the ‘k+1’th line?
+2. Can every node on each ‘k+1’th line always connect to any node on the kth line?
+3. Can we always find a path to connect nodes from the k=1 line all the way to the k=n line?
+
+
+
+
+
+
+
+
+
+
+
+
+With this computer program, we were able to answer the first two questions. We were able to answer the first question with the functions
+* DL_k_copy
+* Best_Split
+* Q1_DL_k
+
+
+We were able to answer the second question with the functions
+* LDS(A)
+* Q2_DL_k
+* Partition_to_breaks_list
+* List_of_partitions_to_list_of_breaks_lists
+* Sublist_in_list
+* Check_all_sublists
+
+
+And we are answering the third questions with the functions
+* Q3
+* tree_of_decompositions
