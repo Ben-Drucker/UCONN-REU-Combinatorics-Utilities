@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[42]:
+# In[1]:
 
 
 import sage.combinat.permutation as permutation
@@ -102,12 +102,34 @@ def ss_times(n):
     return stopping_times
 
 
-# In[ ]:
+# In[49]:
 
 
 # computed up to n=9 so far:
 # 0,0,1,1,2,3,4,5,6
 # OEIS has all sorts of stuff that fits this
-for n in range(1,10):
-    print('the greatest stopping time for n =', n, 'is', max(list(ss_times(n).values())))
+#for n in range(1,8):
+    #print('the greatest stopping time for n =', n, 'is', max(list(ss_times(n).values())))
+
+n = 4
+Sn = posets.SymmetricGroupWeakOrderPoset(n)
+ss = ss_times(n)
+sss = {}
+
+# formats each perm in the dictionary into a string and makes a new dict
+for pair in ss.items():
+    p = pair[0]
+    w = ''
+    for elt in p:
+        w = w + str(elt)
+    sss[w] = pair[1]
+
+# plots a Hasse diagram where each permutation is labeled by its steady state time
+Sn.plot(element_labels=sss)
+
+
+# In[ ]:
+
+
+
 
