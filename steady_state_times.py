@@ -40,6 +40,12 @@ def BBS(arrangement, t):
         # THIS IS DIFFERENT FROM WHAT BBS FUNCTION RETURNS IN bbs_system.py
         # RETURNS ALL CONFIGS FOR times 0,1,...,t
         return system
+    
+    system = [arrangement]
+    for move in range(-t):
+        step = backward_move(system[move])
+        system.append(step)    
+    return system
 
 def SolitonDecomp(config):
     # takes an arrangement of balls (as a list) and returns its SolitonDecomp as a Tableau
@@ -101,6 +107,49 @@ def ss_times(n):
         
     return stopping_times
 
+def backward_ss(pi):
+    # make n backward moves, see what time we reach a steady state
+    
+    perm = list(pi)
+    n = max(perm)
+    # a list where the ith index is the config at t = -i
+    sys = BBS(perm, -n)
+    
+    steady = []
+    for elt in sys[n]:
+        if elt != 0:
+            steady.append(elt)
+    
+    for t in range(n + 1):
+        cur = []
+        for elt in sys[t]:
+            if elt != 0:
+                cur.append(elt)
+            if cur == steady:
+                return -t
+
+def backward_move(old_state):
+    # reverse and complement
+    n = max(old_state)
+    state = []
+    for elt in old_state[::-1]:
+        if elt == 0:
+            state.append(elt)
+        else:
+            state.append(n + 1 - elt)
+    
+    # preform a BBS move on the reversed complement and then return
+    # the reversed complement of that
+    mid_state = BBS_move(state)
+    new_state = []
+    for elt in mid_state[::-1]:
+        if elt == 0:
+            new_state.append(elt)
+        else:
+            new_state.append(n + 1 - elt)
+    
+    return new_state
+
 
 # In[49]:
 
@@ -126,6 +175,16 @@ for pair in ss.items():
 
 # plots a Hasse diagram where each permutation is labeled by its steady state time
 Sn.plot(element_labels=sss)
+
+
+# In[8]:
+
+
+p = [4,2,3,1,5]
+# prints p after 1 backward move, 2 backward moves
+print(BBS(p,-2)[1], BBS(p,-2)[2])
+# prints backward steady state time
+print(backward_ss(p))
 
 
 # In[ ]:
