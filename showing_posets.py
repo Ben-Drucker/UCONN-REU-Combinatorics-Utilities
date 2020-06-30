@@ -13,6 +13,10 @@ P = posets.SymmetricGroupWeakOrderPoset(n)
 # use figsize argument to change size, default=8
 P.show(figsize=20)
 
+# P6 = posets.SymmetricGroupWeakOrderPoset(6)
+# P6.show(figsize=85) # best view the weak order of the symmetric group with 6! elements -EG
+
+
 # use element_labels argument to relabel the elements, for instance with SD equivalence classes
 
 sd_classes = {}
