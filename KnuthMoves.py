@@ -28,7 +28,30 @@ def get_small_data(equivalence_class_representitive, show_equiv_class_list, show
         g.show(edge_labels = True, figsize = fs, vertex_size=0, edge_color="#FF0000")
         
 def get_big_data(n, show_equiv_class_list, show_graph):
-    g = Graph(generateData(n), weighted = True, loops=True)
+    g = Graph(generateData(n), weighted = True, loops=True,multiedges=True)
+    
+    # this code is meant to combine multiple edges between permutations
+    me = g.multiple_edges()
+    i = 0
+    while i < len(me):
+        j = i + 1
+        while me[j][0] == me[i][0] and me[j][1] == me[i][1]:
+            j = j + 1
+            if j > len(me) - 1:
+                break
+        t = me[i][2]
+        flag = False
+        for k in range(i + 1, j):
+            if me[k][2] != t:
+                flag = True
+        g.delete_multiedge(me[i][0], me[i][1])
+        if flag:
+            g.add_edge(me[i][0], me[i][1], "both")
+        else:
+            g.add_edge(me[i][0], me[i][1], me[i][2])
+        i = j
+    #g.remove_loops()
+    
     list_of_equiv_classes = g.connected_components()
     if show_equiv_class_list:
         print("======= Knuth/P-Tableau Equivalence Classes =======")
@@ -39,7 +62,7 @@ def get_big_data(n, show_equiv_class_list, show_graph):
         first_class = int(input("first equiv. class to graph? "))
         last_class = int(input("last equiv. class to graph? "))
         fs = int(input("Enter desired figure size: "))
-        list_of_edges = generateData(n)
+        list_of_edges = g.edges()
         desired_equiv_classes = list_of_equiv_classes[first_class-1:last_class-1]
         desired_elts = []
         for elt in desired_equiv_classes:
